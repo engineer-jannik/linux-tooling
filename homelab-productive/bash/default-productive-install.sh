@@ -34,7 +34,6 @@ echo "Hardening the system..."
 # SSH Hardening
 echo "Hardening SSH configuration..."
 sudo sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin no/' /etc/ssh/sshd_config
-sudo sed -i 's/PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config
 sudo systemctl restart ssh
 echo "SSH configuration hardened."
 
