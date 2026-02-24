@@ -9,7 +9,7 @@ Ziel:
 
 ## Enthaltene Skripte
 
-### `default-productive-install.sh`
+## `default-productive-install.sh`
 
 Installiert ein produktives Basis-Setup auf einer neuen Debian-Maschine (APT-basiert) und fuehrt zusätzliches Hardening aus.
 
@@ -37,14 +37,14 @@ Das Skript fuehrt aktuell folgende Schritte aus:
    - entfernt heruntergeladene Zabbix-Repo-Datei und Webmin-Setup-Skript
    - leert `/tmp/*`
 
-## Voraussetzungen
+### Voraussetzungen
 
 - Debian (das Skript nutzt aktuell explizit das Zabbix-Paket für `debian13`)
 - Internetzugang (Zabbix-Repo-Datei wird per `wget` geladen)
 - `sudo`-Rechte (das Skript ruft viele Kommandos mit `sudo` auf)
 - System mit `systemd` / `systemctl`
 
-## Nutzung
+### Nutzung
 
 ```bash
 ./default-productive-install.sh
@@ -52,7 +52,7 @@ Das Skript fuehrt aktuell folgende Schritte aus:
 
 Hinweis: Im Skript sind mehrere Werte fest hinterlegt (z.B. Zabbix-Server und Hostname). 
 
-## Hinweise
+### Hinweise
 
 - Das Skript führt produktive Änderungen direkt auf dem System aus (SSH, sysctl, fstab, Zabbix-Konfig).
 - Das Skript ist aktuell nur eingeschraenkt idempotent:
