@@ -24,11 +24,11 @@ Das Skript fuehrt aktuell folgende Schritte aus:
    - aktiviert den Dienst mit `systemctl enable`
 3. Konfiguriert Zabbix Agent2:
    - setzt `Server=zabbix.prod.hegemann-intern.de`
-   - setzt `Hostname=$hostname`
+   - setzt `Hostname=$Hostname`
    - hängt `AllowKey=system.run[*]` an `/etc/zabbix/zabbix_agent2.conf` an
    - startet den Agent neu
 4. Hardening:
-   - SSH-Hardening (`PermitRootLogin no`, `PasswordAuthentication no`)
+   - SSH-Hardening (`PermitRootLogin no`)
    - installiert und aktiviert `fail2ban`
    - Shared-Memory-Eintrag für `/run/shm` in `/etc/fstab`
    - Kernel-/Netzwerk-Hardening per `/etc/sysctl.d/99-hardened.conf`
