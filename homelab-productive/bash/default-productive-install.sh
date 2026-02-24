@@ -28,6 +28,15 @@ sudo echo "AllowKey=system.run[*]" >> /etc/zabbix/zabbix_agent2.conf
 sudo systemctl restart zabbix-agent2
 echo "Zabbix Agent2 configured and restarted."
 
+# Install webmin
+echo "Installing Webmin..."
+curl -o webmin-setup-repo.sh https://raw.githubusercontent.com/webmin/webmin/master/webmin-setup-repo.sh
+sudo sh webmin-setup-repo.sh
+sudo ./webmin-setup-repo.sh
+sudo apt update
+sudo apt install webmin --install-recommends
+echo "Webmin installed."
+
 # Hardening
 echo "Hardening the system..."
 
