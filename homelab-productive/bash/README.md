@@ -50,7 +50,7 @@ Das Skript fuehrt aktuell folgende Schritte aus:
 ./default-productive-install.sh
 ```
 
-Hinweis: Im Skript sind mehrere Werte fest hinterlegt (z.B. Zabbix-Server und Hostname). Es gibt aktuell keine Konfiguration über Environment-Variablen.
+Hinweis: Im Skript sind mehrere Werte fest hinterlegt (z.B. Zabbix-Server und Hostname). 
 
 ## Hinweise
 
