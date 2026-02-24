@@ -64,7 +64,6 @@ Die eigentlichen Inhalte dieses Repositories:
 - Skripte (`.sh`)  
 - Ansible-Playbooks & Rollen  
 - Konfigurationsdateien  
-- Infrastruktur-Helper  
 - Dokumentation zur Nutzung  
 
 Empfehlungen:
