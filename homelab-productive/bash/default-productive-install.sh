@@ -21,7 +21,7 @@ echo "Zabbix Agent2 installed and enabled."
 # Configure Zabbix Agent2
 echo "Configuring Zabbix Agent2 for zabbix.prod.hegemann-intern.de..."
 sudo sed -i 's/Server=127.0.0.1/Server=zabbix.prod.hegemann-intern.de/g' /etc/zabbix/zabbix_agent2.conf
-sudo sed -i 's/Hostname=Zabbix server/Hostname=productive-machine/g' /etc/zabbix/zabbix_agent2.conf
+sudo sed -i 's/Hostname=Zabbix server/Hostname=$(hostname)/g' /etc/zabbix/zabbix_agent2.conf
 sudo echo "AllowKey=system.run[*]" >> /etc/zabbix/zabbix_agent2.conf
 
 # Restart Zabbix Agent2
