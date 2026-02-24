@@ -32,7 +32,6 @@ echo "Zabbix Agent2 configured and restarted."
 echo "Installing Webmin..."
 curl -o webmin-setup-repo.sh https://raw.githubusercontent.com/webmin/webmin/master/webmin-setup-repo.sh
 sudo sh webmin-setup-repo.sh
-sudo ./webmin-setup-repo.sh
 sudo apt update
 sudo apt install webmin --install-recommends
 echo "Webmin installed."
