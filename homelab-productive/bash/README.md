@@ -34,7 +34,7 @@ Das Skript fuehrt aktuell folgende Schritte aus:
    - Kernel-/Netzwerk-Hardening per `/etc/sysctl.d/99-hardened.conf`
 5. Cleanup:
    - `apt autoremove`, `apt clean`
-   - entfernt heruntergeladene Zabbix-Repo-Datei
+   - entfernt heruntergeladene Zabbix-Repo-Datei und Webmin-Setup-Skript
    - leert `/tmp/*`
 
 ## Voraussetzungen

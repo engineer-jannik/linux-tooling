@@ -77,6 +77,7 @@ sudo apt autoremove -y
 sudo apt clean
 sudo rm zabbix-release_latest_7.4+debian13_all.deb
 sudo rm -rf /tmp/*
+sudo rm -rf webmin-setup-repo.sh
 echo "System cleaned up."
 
 # Final message
