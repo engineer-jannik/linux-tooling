@@ -1,4 +1,4 @@
-# 🚀 homelab-productive/bash
+# 🚀 homelab-productive/ansbile
 
 Automatisierte Playbooks für Deployment, Monitoring und Hardening von Maschinen in meinem produktiven Homelab.
 
