@@ -1,0 +1,149 @@
+---
+- name: Default Productive Machine Setup (Debian 13 Trixie)
+  hosts: all
+  become: true
+  vars:
+    # Hier Standardwerte setzen oder per --extra-vars übergeben
+    zabbix_server_passive: "zabbix.prod.hegemann-intern.de"
+    zabbix_server_active: "zabbix.prod.hegemann-intern.de"
+    zabbix_repo_url: "https://repo.zabbix.com/zabbix/7.4/release/debian/pool/main/z/zabbix-release/zabbix-release_latest_7.4+debian13_all.deb"
+
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Install default tools
+      apt:
+        name:
+          - curl
+          - htop
+          - vim
+          - tree
+          - unzip
+          - wget
+          - gpg
+        state: present
+
+    ## --- Zabbix Agent2 Sektion ---
+
+    - name: Download Zabbix Release Package
+      get_url:
+        url: "{{ zabbix_repo_url }}"
+        dest: "/tmp/zabbix-release.deb"
+
+    - name: Install Zabbix Repository
+      apt:
+        deb: "/tmp/zabbix-release.deb"
+
+    - name: Install and enable Zabbix Agent2
+      apt:
+        name: zabbix-agent2
+        state: present
+        update_cache: yes
+
+    - name: Configure Zabbix Agent2
+      lineinfile:
+        path: /etc/zabbix/zabbix_agent2.conf
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+      loop:
+        - { regexp: '^Server=', line: "Server={{ zabbix_server_passive }}" }
+        - { regexp: '^ServerActive=', line: "ServerActive={{ zabbix_server_active }}" }
+        - { regexp: '^Hostname=', line: "Hostname={{ ansible_hostname }}" }
+      notify: Restart Zabbix Agent2
+
+    - name: Allow system.run in Zabbix
+      lineinfile:
+        path: /etc/zabbix/zabbix_agent2.conf
+        line: "AllowKey=system.run[*]"
+        insertafter: EOF
+      notify: Restart Zabbix Agent2
+
+    ## --- Webmin Sektion ---
+
+    - name: Download Webmin setup script
+      get_url:
+        url: https://raw.githubusercontent.com/webmin/webmin/master/webmin-setup-repo.sh
+        dest: /tmp/webmin-setup-repo.sh
+        mode: '0755'
+
+    - name: Run Webmin setup script
+      command: sh /tmp/webmin-setup-repo.sh -f
+      args:
+        creates: /etc/apt/sources.list.d/webmin.list
+
+    - name: Install Webmin
+      apt:
+        name: webmin
+        state: present
+        install_recommends: yes
+
+    ## --- Hardening Sektion ---
+
+    - name: SSH Hardening - Disable Root Login
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^#?PermitRootLogin'
+        line: 'PermitRootLogin no'
+      notify: Restart SSH
+
+    - name: Install and enable Fail2Ban
+      apt:
+        name: fail2ban
+        state: present
+
+    - name: Ensure Fail2Ban is started
+      service:
+        name: fail2ban
+        state: started
+        enabled: yes
+
+    - name: Shared Memory Hardening (fstab)
+      mount:
+        path: /run/shm
+        src: none
+        fstype: tmpfs
+        opts: defaults,ro,nosuid,nodev,noexec
+        state: present
+
+    - name: Kernel Hardening (sysctl)
+      copy:
+        dest: /etc/sysctl.d/99-hardened.conf
+        content: |
+          net.ipv4.conf.all.accept_redirects = 0
+          net.ipv4.conf.all.secure_redirects = 0
+          net.ipv4.conf.all.send_redirects = 0
+          net.ipv4.conf.all.rp_filter = 1
+          net.ipv4.icmp_echo_ignore_broadcasts = 1
+      notify: Apply Sysctl
+
+    ## --- Cleanup Sektion ---
+
+    - name: Cleanup temporary files
+      file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - /tmp/zabbix-release.deb
+        - /tmp/webmin-setup-repo.sh
+
+    - name: Autoremove unused packages
+      apt:
+        autoremove: yes
+        purge: yes
+
+  handlers:
+    - name: Restart Zabbix Agent2
+      service:
+        name: zabbix-agent2
+        state: restarted
+
+    - name: Restart SSH
+      service:
+        name: ssh
+        state: restarted
+
+    - name: Apply Sysctl
+      command: sysctl -p /etc/sysctl.d/99-hardened.conf
