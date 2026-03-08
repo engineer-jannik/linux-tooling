@@ -2,6 +2,7 @@
 - name: Default Productive Machine Setup (Debian 13 Trixie)
   hosts: all
   become: true
+  become_method: su
   vars:
     # Hier Standardwerte setzen oder per --extra-vars übergeben
     zabbix_server_passive: "zabbix.prod.hegemann-intern.de"
