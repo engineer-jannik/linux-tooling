@@ -59,13 +59,6 @@
         - { regexp: '^Hostname=', line: "Hostname={{ ansible_hostname }}" }
       notify: Restart Zabbix Agent2
 
-    - name: Allow system.run in Zabbix
-      lineinfile:
-        path: /etc/zabbix/zabbix_agent2.conf
-        line: "AllowKey=system.run[*]"
-        insertafter: EOF
-      notify: Restart Zabbix Agent2
-
     ## --- Webmin Sektion ---
 
     - name: Download Webmin setup script
@@ -84,6 +77,15 @@
         name: webmin
         state: present
         install_recommends: yes
+
+    - name: Configure Webmin Access
+      blockinfile:
+        path: /etc/webmin/miniserv.conf
+        insertafter: EOF
+        block: |
+          known_ips=192.168.20.12
+          allow=192.168.20.12
+      notify: Restart Webmin
 
     ## --- Hardening Sektion ---
 
@@ -143,6 +145,11 @@
     - name: Restart Zabbix Agent2
       service:
         name: zabbix-agent2
+        state: restarted
+
+    - name: Restart Webmin
+      service:
+        name: webmin
         state: restarted
 
     - name: Restart SSH
