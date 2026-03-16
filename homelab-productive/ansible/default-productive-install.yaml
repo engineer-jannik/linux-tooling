@@ -3,6 +3,8 @@
   hosts: all
   become: true
   become_method: su
+  environment:
+    PATH: "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
   vars:
     # Hier Standardwerte setzen oder per --extra-vars übergeben
     zabbix_server_passive: "zabbix.prod.hegemann-intern.de"
@@ -38,8 +40,6 @@
       apt:
         deb: "/tmp/zabbix-release.deb"
       become: yes
-      environment:
-        PATH: "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
     - name: Install and enable Zabbix Agent2
       apt:
