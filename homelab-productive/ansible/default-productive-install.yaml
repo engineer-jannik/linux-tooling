@@ -37,12 +37,16 @@
     - name: Install Zabbix Repository
       apt:
         deb: "/tmp/zabbix-release.deb"
+      become: yes
+      environment:
+        PATH: "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
     - name: Install and enable Zabbix Agent2
       apt:
         name: zabbix-agent2
         state: present
         update_cache: yes
+      become: yes
 
     - name: Configure Zabbix Agent2
       lineinfile:
